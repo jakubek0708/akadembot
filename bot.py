@@ -24,9 +24,9 @@ async def on_ready():
 async def on_member_join(member):
     global member_three_number
     channel = client.get_channel(820634014662131773)
-    with open("members.txt", 'r') as f:
+    with open("/opt/akadembot/members.txt", 'r') as f:
         number = int(f.read()) + 1
-    with open("members.txt", 'w') as f:
+    with open("/opt/akadembot/members.txt", 'w') as f:
         f.truncate()
         f.write(str(number))
     await channel.send(f"({member_three_number}) {member} jest {number} użytkownikiem")
@@ -49,7 +49,7 @@ async def komendy(ctx):
 async def members(ctx, *, message=None):
     role = discord.utils.get(ctx.guild.roles, name="admini")
     if message == None:
-        with open("members.txt", 'r') as f:
+        with open("/opt/akadembot/members.txt", 'r') as f:
             number = f.read()
             string = f"Obecnie na serwerze jest: {number} osób"
             await ctx.send(string)
@@ -60,7 +60,7 @@ async def members(ctx, *, message=None):
             except:
                 await ctx.send("Musisz wpisać liczbę")
             number = str(number)
-            with open("members.txt", 'w') as f:
+            with open("/opt/akadembot/members.txt", 'w') as f:
                 await ctx.send(f"Zmieniam liczbę użytkowników na: {number}")
                 f.truncate()
                 f.write(number)
