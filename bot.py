@@ -5,18 +5,22 @@ from dotenv import load_dotenv
 import os
 
 load_dotenv()
-TOKEN = os.getenv('DISCORD_TOKEN') #ładowanie tokenu bota
+TOKEN = os.getenv('DISCORD_TOKEN')  # ładowanie tokenu bota
 
 intents = discord.Intents.default()
 intents.members = True
-client = commands.Bot(command_prefix = '$', intents=intents)
+client = commands.Bot(command_prefix='$', intents=intents)
 
-@client.event #jak sie bot wlacza
+member_three_number = 1
+
+
+@client.event  # jak sie bot wlacza
 async def on_ready():
     print("akadembot gotowy B)")
     await client.change_presence(activity=discord.Game(name="komendy: $komendy"))
 
-@client.event #licznie członków po dołączeniu
+
+@client.event  # licznie członków po dołączeniu
 async def on_member_join(member):
     channel = client.get_channel(820634014662131773)
     with open("/opt/akadembot/members.txt", 'r') as f:
@@ -24,17 +28,24 @@ async def on_member_join(member):
     with open("/opt/akadembot/members.txt", 'w') as f:
         f.truncate()
         f.write(str(number))
-    await channel.send(f"{member} jest {number} użytkownikiem")
+    await channel.send(f"({member_three_number}){member} jest {number} użytkownikiem")
+    if member_three_number < 3:
+        member_three_number += 1
+    else:
+        member_three_number = 1
 
-@client.command() #dostepne komendy
+
+@client.command()  # dostepne komendy
 async def komendy(ctx):
-    embed=discord.Embed(title="Komendy", color=0x1a667f)
+    embed = discord.Embed(title="Komendy", color=0x1a667f)
     embed.add_field(name="$members", value="wyświetla liczbę użytkowników", inline=False)
-    embed.add_field(name="$members [ilość]", value="zmienia ilość użytkowników (admin only)", inline=False)
+    embed.add_field(name="$members [ilość]",
+                    value="zmienia ilość użytkowników (admin only)", inline=False)
     await ctx.send(embed=embed)
 
-@client.command() #komenda do zmieniania/wyswietlania liczby czlonkow
-async def members(ctx, *, message = None):
+
+@client.command()  # komenda do zmieniania/wyswietlania liczby czlonkow
+async def members(ctx, *, message=None):
     role = discord.utils.get(ctx.guild.roles, name="admini")
     if message == None:
         with open("/opt/akadembot/members.txt", 'r') as f:
